@@ -32,6 +32,7 @@ class SirTests(unittest.TestCase):
         self.assertTrue(close(actual_under, expected_susceptible))
         self.assertTrue(close(actual_over, expected_susceptible))
 
+
     def test_alpha_search(self):
         expected_alpha = 0.3
         model_init = sir.Model(alpha = expected_alpha, beta = 0.5)
