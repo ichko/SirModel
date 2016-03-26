@@ -2,7 +2,7 @@ import numpy as np
 import math
 
 class Model:
-    def __init__(self, alpha = 0.01, beta = 0.01, s_init = 725, i_init = 1, r_init = 0):
+    def __init__(self, alpha = 0.01, beta = 0.01, s_init = 750, i_init = 1, r_init = 0):
         self.s_init = s_init
         self.i_init = i_init
         self.r_init = r_init
@@ -67,24 +67,8 @@ def model_approx(model_init, exp_data, var_name, var_init = 0.1, learning_rate =
     current_error = quality_metric(var_val)
 
     while max_iter and current_error > threshold:
-        var_val = var_val - learning_rate * math.copysign(1, gradient(var_val))
+        var_val = var_val - math.copysign(learning_rate, gradient(var_val))
         current_error = quality_metric(var_val)
         max_iter -= 1
 
     return var_val
-
-
-'''
-alpha = 0.3
-beta = 0.5
-
-model_init = Model(alpha, beta)
-exp_data = model_init.run()
-
-result = model_approx(
-    model_init = model_init,
-    exp_data = exp_data,
-    var_name = 'beta')
-
-print(result) #0.5000000000000003 close enough
-'''
