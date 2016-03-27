@@ -1,8 +1,10 @@
-import numpy as np
 import math
 
+
 class Model:
-    def __init__(self, alpha = 0.01, beta = 0.01, s_init = 750, i_init = 1, r_init = 0):
+
+    def __init__(self, alpha=0.01, beta=0.01,
+                 s_init=750, i_init=1, r_init=0):
         self.s_init = s_init
         self.i_init = i_init
         self.r_init = r_init
@@ -36,6 +38,7 @@ class Model:
 
 
 class Utils:
+
     eps = 0.001
 
     @staticmethod
@@ -49,10 +52,10 @@ class Utils:
     @staticmethod
     def rss_sum(model_data, exp_data):
         return sum(Utils.rss(model_set, exp_set)
-            for model_set, exp_set in zip(model_data, exp_data))
+                   for model_set, exp_set in zip(model_data, exp_data))
 
     @staticmethod
-    def quality_metric_extract(model, exp_data, var_name):
+    def get_quality_metric(model, exp_data, var_name):
         def quality_metric(var_val):
             setattr(model, var_name, var_val)
             return Utils.rss_sum(model.run(), exp_data)
@@ -60,9 +63,10 @@ class Utils:
         return quality_metric
 
 
-def model_approx(model_init, exp_data, var_name, var_init = 0.1, learning_rate = 0.01, threshold = 0.001, max_iter = 1000):
+def model_approx(model_init, exp_data, var_name, var_init=0.1,
+                 learning_rate=0.01, threshold=0.001, max_iter=1000):
     var_val = var_init
-    quality_metric = Utils.quality_metric_extract(model_init, exp_data, var_name)
+    quality_metric = Utils.get_quality_metric(model_init, exp_data, var_name)
     gradient = Utils.derive(quality_metric)
     current_error = quality_metric(var_val)
 
