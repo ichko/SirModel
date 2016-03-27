@@ -3,30 +3,7 @@ import matplotlib.patches as mpatches
 from matplotlib.widgets import Slider
 import numpy as np
 import math
-
-def SIR(s_init, i_init, r_init, alpha, beta):
-    S = [s_init]
-    I = [i_init]
-    R = [r_init]
-    time = 0
-    total_num_people = s_init + i_init + r_init
-    basic_reproduction = s_init * beta - alpha
-    time_unit = 10
-    max_time = 1000
-
-    while time < max_time and (S[time] > 1 or I[time] > 1):
-        s_to_i = beta * S[time] * I[time] * time_unit
-        i_to_r = alpha * I[time] * time_unit
-
-        if S[time] - s_to_i < 0: s_to_i = S[time]
-        if I[time] + s_to_i - i_to_r < 0: i_to_r = I[time] + s_to_i
-
-        S.append(S[time] - s_to_i)
-        I.append(I[time] + s_to_i - i_to_r)
-        R.append(total_num_people - (S[time] + I[time]))
-        time += 1
-
-    return {'S': S, 'I': I, 'R': R, 'Ro': basic_reproduction};
+import sir
 
 
 fig, ax = plt.subplots()
@@ -55,9 +32,11 @@ s_iInit = Slider(iInitAmp, 'infected', 1, 100, valinit=2)
 def update(val):
     alpha = s_alpha.val / 100000
     beta = s_beta.val / 500000
-    sir = SIR(s_sInit.val, s_iInit.val, 0, alpha, beta)
+    model = sir.Model(alpha, beta, s_sInit.val, s_iInit.val, 0)
+    model.time_unit = 10
+    data = model.run()
 
-    basic_reproduction = sir['Ro']
+    basic_reproduction = 2 #sir['Ro']
     if basic_reproduction > 0:
         print('epidemic')
     else:
@@ -66,9 +45,9 @@ def update(val):
     print(basic_reproduction)
     print('alpha: ' + str(alpha) + ' beta: ' + str(beta))
 
-    s_line.set_data(range(len(sir['S'])), sir['S'])
-    i_line.set_data(range(len(sir['I'])), sir['I'])
-    r_line.set_data(range(len(sir['R'])), sir['R'])
+    s_line.set_data(range(len(data[0])), data[0])
+    i_line.set_data(range(len(data[1])), data[1])
+    r_line.set_data(range(len(data[2])), data[2])
 
     fig.canvas.draw_idle()
 

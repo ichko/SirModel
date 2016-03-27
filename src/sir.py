@@ -11,18 +11,21 @@ class Model:
         self.alpha = alpha
         self.beta = beta
         self.max_iter = 1000
+        self.time_unit = 1
+        self.basic_reproduction = None
 
     def run(self):
         S = [self.s_init]
         I = [self.i_init]
         R = [self.r_init]
         time = 0
+
         total_num_people = self.s_init + self.i_init + self.r_init
-        basic_reproduction = self.s_init * self.beta - self.alpha
+        self.basic_reproduction = self.s_init * self.beta - self.alpha
 
         while time < self.max_iter and (S[time] > 1 or I[time] > 1):
-            s_to_i = self.beta * S[time] * I[time]
-            i_to_r = self.alpha * I[time]
+            s_to_i = self.beta * S[time] * I[time] * self.time_unit
+            i_to_r = self.alpha * I[time] * self.time_unit
 
             if S[time] - s_to_i < 0:
                 s_to_i = S[time]
