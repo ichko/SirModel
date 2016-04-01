@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Cellular automata epidemic model</title>
+        <script type="text/javascript" src="model.js"></script>
+        <style media="screen">
+            html, body{background: #eee;}
+            *{margin: 0;padding:0;font-family: 'roboto mono black';border: 0;}
+            .main{width: 75%;margin: 0 auto;padding: 20px;background: #fff;border-top: 5px solid #4FD5D6;}
+            .btn{background: #4FD5D6;padding: 8px 10px;color: #fff;text-transform: uppercase;}
+            .controls{padding: 0 0 20px 0;}
+            .right{float: right;}
+            input[type="range"]{position: relative;bottom: -2px;}
+            .group{display: inline-block;font-size: 8pt;position: relative;bottom: -8px;}
+            .color{width: 20px;height: 20px;display: inline-block;border-radius: 50%;position: relative;bottom: -4px;}
+            hr{margin: 10px 0;border-top: 2px solid #ccc;}
+        </style>
+    </head>
+    <body>
+        <div class="main">
+            <div class="controls">
+                <span class="right" id="info"></span>
+                <button class="btn" id="pause">pause</button>
+                <button class="btn" id="next">next</button>
+                <button class="btn" id="restart">restart</button> |
+
+                <span class="group">
+                    Infection prob. <br/>
+                    <input type="range" id="pInfect" min="0" max="100">
+                </span>
+                <span class="group">
+                    Recovery prob. <br/>
+                    <input type="range" id="pRecover" min="0" max="100">
+                </span>
+                <span class="group">
+                    Immunity period <br/>
+                    <input type="range" id="wrapFactor" min="0" max="50">
+                </span>
+            </div>
+
+            <canvas id="canvas" width="1200" height="600" style="width: 100%;"></canvas>
+
+            <hr/>
+            <span class="color" style="background: #4FD5D6"></span> Susceptible |
+            <span class="color" style="background: #FF0000"></span> Infected |
+            <span class="color" style="background: #400D12"></span> Removed
+        </div>
+
+        <script type="text/javascript">
+            var paused = true;
+            var info = document.getElementById('info');
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
+
+            var world = new grid();
+            world.neighboursExtractor = mooreTorusNeighborhoodArr;
+            // world.model = new kermackModel(0.5, 0.1, 70);
+            // world.model = new kermackModel(1, 0.6, 8);
+            world.model = new kermackModel(0.1, 0.1, 70);
+            world.randomInit(0.001);
+            var cnt = 0;
+
+            function animate(){
+                if(paused) return;
+                renderNextState();
+            }
+
+            setInterval(animate, 1000 / 30);
+
+            function clear(){
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height)
+            }
+
+            function renderNextState(){
+                clear();
+
+                ctx.translate(605, 0);
+                world.renderStats(ctx);
+
+                ctx.translate(-605, 0);
+                world.render(ctx);
+                world.nextState();
+                info.innerHTML = 'day ' + cnt++;
+            }
+            renderNextState();
+
+            var sliders = document.querySelectorAll('input[type="range"]');
+            for (var i = 0; i < sliders.length; i++) {
+                sliders[i].addEventListener('change', sliderChange);
+            }
+
+            function sliderChange(e){
+                var val = e.target.value;
+                if(e.target.id != 'wrapFactor')
+                    val /= 100;
+
+                world.model[e.target.id] = val
+                console.log(world.model[e.target.id]);
+            }
+
+            document.getElementById('restart').addEventListener("click", function(){
+                cnt = 0;
+                world.randomInit(0.001);
+                renderNextState();
+            });
+
+            document.getElementById('next').addEventListener("click", function(){
+                renderNextState();
+            });
+
+            document.getElementById('pause').addEventListener("click", function(){
+                paused = !paused;
+            });
+
+        </script>
+    </body>
+</html>
