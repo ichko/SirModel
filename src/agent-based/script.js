@@ -118,8 +118,5 @@ var Agent = (function(){
         this.pos.y = this.pos.y.mod(size.height);
     }
 
-    Agent.prototype.render = function(ctx){
-    }
-
     return Agent;
 })();
