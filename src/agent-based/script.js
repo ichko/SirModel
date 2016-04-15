@@ -4,14 +4,15 @@ Number.prototype.mod = function(n) {
 
 
 var World = (function(){
-    function World(){
+    function World(model, size){
+        this.model = model;
+        this.size = size || {width: 100, height: 100};
         this.agents = [];
-        this.size = {width: 100, height: 100};
     }
 
     World.prototype.nextState = function(){
         for (var i = 0; i < this.agents.length; i++) {
-            this.agents[i].move(this.size);
+            this.model.mutateAgent(this.agents[i], this);
         }
     }
 
@@ -19,8 +20,10 @@ var World = (function(){
         for (var i = 0; i < this.agents.length; i++) {
             ctx.beginPath();
             ctx.fillStyle = this.agents[i].state.background();
-            ctx.rect(this.agents[i].pos.x, this.agents[i].pos.y,
-                     this.agents[i].size * 2, this.agents[i].size * 2);
+            //ctx.rect(this.agents[i].pos.x, this.agents[i].pos.y,
+            //         this.agents[i].size * 2, this.agents[i].size * 2);
+            ctx.arc(this.agents[i].pos.x, this.agents[i].pos.y,
+                    this.agents[i].size, 0, 2 * Math.PI);
             ctx.fill();
         }
     }
@@ -43,13 +46,17 @@ var World = (function(){
 var Status = (function(){
     function Status(value){
         this.value = value || 0;
-        this.color = 'rgb(' + Math.round(Math.random() * 255) + ',' +
-                              Math.round(Math.random() * 255) + ',' +
-                              Math.round(Math.random() * 255) + ')';
+        this.color = {
+            red:   Math.round(Math.random() * 250),
+            green: Math.round(Math.random() * 250),
+            blue:  Math.round(Math.random() * 250)
+        };
     }
 
     Status.prototype.background = function(){
-        return this.color;
+        return 'rgb(' + this.color.red   + ',' +
+                        this.color.green + ',' +
+                        this.color.blue  + ')';
     }
 
     return Status;
@@ -102,18 +109,21 @@ var Agent = (function(){
     function Agent(pos, state){
         this.pos = pos || new Vector();
         this.size = 2 + Math.random() * 5;
-        this.speed = 1 + Math.random() * 3;
+        this.desiredSize = this.size;
         this.direction = 0;
         this.state = state || new Status();
     }
 
     Agent.prototype.move = function(size){
         this.direction += Math.random() / 2 - 0.25;
-        var translateVect = new Vector(
-            this.speed * Math.cos(this.direction),
-            this.speed * Math.sin(this.direction)
+        var translationVect = new Vector(
+            (10 /  this.size / 2) * Math.cos(this.direction),
+            (10 / this.size / 2) * Math.sin(this.direction)
         );
-        this.pos.translate(translateVect);
+
+        this.size += (this.desiredSize - this.size) / 10;
+        this.pos.translate(translationVect);
+
         this.pos.x = this.pos.x.mod(size.width);
         this.pos.y = this.pos.y.mod(size.height);
     }
