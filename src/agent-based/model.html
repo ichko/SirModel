@@ -14,23 +14,22 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             var ctx = canvas.getContext('2d');
+
             var world = new World();
             world.randomInit(200, canvas.width, canvas.height);
 
-            function animate(){
+            (function animate(){
                 clear();
                 world.nextState();
                 world.render(ctx);
                 window.requestAnimationFrame(animate);
-            }
-            animate();
+            })();
 
 
             function clear(){
-                ctx.fillStyle = 'rgba(255,255,255,0.5)';
+                ctx.fillStyle = 'rgba(255,255,255,0.3)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height)
             }
-
         </script>
 
     </body>
