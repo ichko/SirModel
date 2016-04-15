@@ -44,24 +44,24 @@ class Utils:
 
     eps = 0.001
 
-    @staticmethod
-    def derive(func):
-        return lambda x: (func(x + Utils.eps) - func(x)) / Utils.eps
+    @classmethod
+    def derive(cls, func):
+        return lambda x: (func(x + cls.eps) - func(x)) / cls.eps
 
     @staticmethod
     def rss(actual, expected):
         return sum((act - exp) ** 2 for act, exp in zip(actual, expected))
 
-    @staticmethod
-    def rss_sum(model_data, exp_data):
-        return sum(Utils.rss(model_set, exp_set)
+    @classmethod
+    def rss_sum(cls, model_data, exp_data):
+        return sum(cls.rss(model_set, exp_set)
                    for model_set, exp_set in zip(model_data, exp_data))
 
-    @staticmethod
-    def get_quality_metric(model, exp_data, var_name):
+    @classmethod
+    def get_quality_metric(cls, model, exp_data, var_name):
         def quality_metric(var_val):
             setattr(model, var_name, var_val)
-            return Utils.rss_sum(model.run(), exp_data)
+            return cls.rss_sum(model.run(), exp_data)
 
         return quality_metric
 

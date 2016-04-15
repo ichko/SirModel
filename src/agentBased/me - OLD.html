@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Agent Based Model</title>
+    </head>
+    <body>
+        <canvas id="canvas" width="800" height="600"></canvas>
+
+        <script type="text/javascript">
+            Number.prototype.mod = function(n) {
+                return ((this % n) + n) % n;
+            };
+
+            var eps = 10;
+
+
+            function world(){
+                this.agents = [];
+            }
+
+            world.prototype.nextState = function(){
+                for (var i = 0; i < this.agents.length; i++) {
+                    this.agents[i].move();
+                }
+            }
+
+            world.prototype.render = function(ctx){
+                for (var i = 0; i < this.agents.length; i++) {
+                    this.agents[i].render(ctx);
+                }
+            }
+
+            world.prototype.randomInit = function(cnt, width, height){
+                for (var i = 0; i < cnt; i++) {
+                    var ag = new agent(
+                        new vector(Math.random() * width, Math.random() * height),
+                        Math.round(50 + Math.random() * 100)
+                    );
+                    ag.nextPos = new vector(ag.pos.x, ag.pos.y);
+                    this.agents.push(ag);
+                }
+            }
+
+
+            function status(value){
+                this.value = value || 0;
+            }
+
+            status.prototype.background = function(){
+                return '#000';
+            }
+
+
+            function vector(x, y){
+                this.x = x || 0;
+                this.y = y || 0;
+            }
+
+            vector.prototype.length = function(){
+                return Math.sqrt(this.x * this.x + this.y * this.y);
+            }
+
+            vector.prototype.distance = function(vect){
+                return Math.sqrt((this.x - vect.x) * (this.x - vect.x) + (this.y - vect.y) * (this.y - vect.y));
+            }
+
+            vector.prototype.direction = function(vect){
+                return new vector(vect.x - this.x, vect.y - this.y);
+            }
+
+            vector.prototype.translate = function(vect){
+                this.x += vect.x;
+                this.y += vect.y
+                return this;
+            }
+
+            vector.prototype.normalize = function(){
+                var len = this.length();
+                this.x /= len;
+                this.y /= len;
+                return this;
+            }
+
+            vector.prototype.scale = function(n){
+                this.x *= n;
+                this.y *=  n;
+                return this;
+            }
+
+
+            function agent(pos, migrationRadius, state){
+                this.pos = pos || new vector();
+                this.migrationRadius = migrationRadius || 35;
+                this.size = 2 + Math.random() * 3;
+                this.speed = 1 + Math.random() * 3;
+                this.nextPos = new vector();
+                this.state = state || new status();
+            }
+
+            agent.prototype.chooseNextPos = function(){
+                var randomAngle = Math.random() * 2 * Math.PI;
+                this.nextPos.x = this.migrationRadius * Math.cos(randomAngle) + this.pos.x;
+                this.nextPos.y = this.migrationRadius * Math.sin(randomAngle) + this.pos.y;
+            }
+
+            agent.prototype.move = function(){
+                if(this.pos.distance(this.nextPos) < eps)
+                    this.chooseNextPos();
+                var translateVect = this.pos.direction(this.nextPos).normalize().scale(this.speed);
+                this.pos.translate(translateVect);
+            }
+
+            agent.prototype.render = function(ctx){
+                ctx.beginPath();
+                ctx.fillStyle = this.state.background();
+                ctx.arc(this.pos.x.mod(800), this.pos.y.mod(600), this.size, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.closePath();
+            }
+
+
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
+            var pessWorld = new world();
+            pessWorld.randomInit(200, 800, 800);
+
+            function animate(){
+                clear();
+                pessWorld.nextState();
+                pessWorld.render(ctx);
+                window.requestAnimationFrame(animate);
+            }
+            animate();
+
+
+            function clear(){
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height)
+            }
+
+        </script>
+
+    </body>
+</html>

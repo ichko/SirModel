@@ -1,8 +1,6 @@
 from matplotlib import pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.widgets import Slider
-import numpy as np
-import math
 import sir
 
 
@@ -11,7 +9,7 @@ plt.subplots_adjust(left=0.1, bottom=0.30)
 s_line, = plt.plot([], [], lw=2, color='green', label='The red data')
 i_line, = plt.plot([], [], lw=2, color='red')
 r_line, = plt.plot([], [], lw=2, color='blue')
-plt.axis([0, 500, 0, 1000])
+plt.axis([0, 800, 0, 1000])
 
 s_patch = mpatches.Patch(color='green', label='S')
 i_patch = mpatches.Patch(color='red', label='I')
@@ -29,15 +27,16 @@ s_beta = Slider(axamp, 'beta', 1, 35, valinit=4)
 s_sInit = Slider(sInitAmp, 'susceptible', 1, 1000, valinit=750)
 s_iInit = Slider(iInitAmp, 'infected', 1, 100, valinit=2)
 
-def update(val):
+
+def update(val=0):
     alpha = s_alpha.val / 100000
     beta = s_beta.val / 500000
     model = sir.Model(alpha, beta, s_sInit.val, s_iInit.val, 0)
     model.time_unit = 10
     data = model.run()
 
-    basic_reproduction = 2 #sir['Ro']
-    if basic_reproduction > 0:
+    basic_reproduction = 2  # sir['Ro']
+    if basic_reproduction >= 0:
         print('epidemic')
     else:
         print('none epidemic')
@@ -55,6 +54,6 @@ s_alpha.on_changed(update)
 s_beta.on_changed(update)
 s_sInit.on_changed(update)
 s_iInit.on_changed(update)
-update(0)
+update()
 
 plt.show()
