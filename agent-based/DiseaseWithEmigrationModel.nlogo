@@ -22,6 +22,7 @@ end
 
 to go
   move-turtles
+  check-death
   tick
 end
 
@@ -33,6 +34,12 @@ to move-turtles
     ifelse show-life?
     [ set label energy ]
     [ set label "" ]
+  ]
+end
+
+to check-death
+  ask turtles [
+    if energy <= 0 [ die ]
   ]
 end
 @#$#@#$#@
