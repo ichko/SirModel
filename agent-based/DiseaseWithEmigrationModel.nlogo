@@ -30,10 +30,10 @@ to-report generate-initial-energy
   ; 50% chance for being an adult
   let random-choice random 10
   if random-choice <= 2
-  [report 0]
+  [report 30]
   if random-choice <= 5
-  [report 40]
-  report 80
+  [report 60]
+  report 100
 
 end
 
