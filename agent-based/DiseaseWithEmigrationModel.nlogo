@@ -1,3 +1,6 @@
+globals [
+]
+
 turtles-own [
   energy
   susceptible?
@@ -8,6 +11,7 @@ turtles-own [
 to initialize-people
   create-turtles 100 [ setxy random-xcor random-ycor ]
   ask turtles [set shape "person"]
+  ask turtles [set energy 100]
 end
 
 to setup
@@ -25,7 +29,12 @@ to move-turtles
   ask turtles [
     right random 360
     forward 1
+    ifelse show-life?
+    [ set label energy ]
+    [ set label "" ]
   ]
+
+
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -139,6 +148,17 @@ NIL
 NIL
 NIL
 1
+
+SWITCH
+19
+155
+136
+188
+show-life?
+show-life?
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
