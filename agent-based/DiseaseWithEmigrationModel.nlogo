@@ -21,16 +21,16 @@ to setup
 end
 
 to go
+  check-if-should-continue
   move-turtles
   check-death
-  tick
 end
 
 to move-turtles
   ask turtles [
     right random 360
     forward 1
-    set energy energy - 1
+    set energy energy - random 4
     ifelse show-life?
     [ set label energy ]
     [ set label "" ]
@@ -41,6 +41,12 @@ to check-death
   ask turtles [
     if energy <= 0 [ die ]
   ]
+end
+
+to check-if-should-continue
+  ifelse count turtles <= 0
+  [stop]
+  [tick]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -162,7 +168,7 @@ SWITCH
 182
 show-life?
 show-life?
-1
+0
 1
 -1000
 
