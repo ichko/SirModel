@@ -11,7 +11,7 @@ turtles-own [
 to initialize-people
   create-turtles 100 [ setxy random-xcor random-ycor ]
   ask turtles [set shape "person"]
-  ask turtles [set energy 100]
+  ask turtles [set energy generate-initial-energy]
 end
 
 to setup
@@ -26,13 +26,24 @@ to go
   check-death
 end
 
+to-report generate-initial-energy
+  ; 50% chance for being an adult
+  let random-choice random 10
+  if random-choice <= 2
+  [report 0]
+  if random-choice <= 5
+  [report 40]
+  report 80
+
+end
+
 to move-turtles
   ask turtles [
     right random 360
     forward 1
     set energy energy - random 4
     ifelse show-life?
-    [ set label energy ]
+    [ set label 100 - energy ]
     [ set label "" ]
   ]
 end
