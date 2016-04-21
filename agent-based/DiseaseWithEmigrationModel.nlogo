@@ -44,10 +44,10 @@ to check-death
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-158
-10
-597
-470
+131
+12
+570
+472
 16
 16
 13.0
@@ -71,10 +71,10 @@ ticks
 30.0
 
 BUTTON
-21
-18
-94
-51
+22
+57
+95
+90
 NIL
 setup
 NIL
@@ -88,10 +88,10 @@ NIL
 1
 
 BUTTON
-26
-82
-89
-115
+27
+102
+90
+135
 NIL
 go
 T
@@ -156,15 +156,33 @@ NIL
 1
 
 SWITCH
-19
-155
-136
-188
+3
+149
+120
+182
 show-life?
 show-life?
-0
+1
 1
 -1000
+
+PLOT
+615
+207
+815
+357
+Number of people
+time
+totals
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot count turtles"
 
 @#$#@#$#@
 ## WHAT IS IT?
