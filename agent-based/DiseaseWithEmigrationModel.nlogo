@@ -29,12 +29,11 @@ to move-turtles
   ask turtles [
     right random 360
     forward 1
+    set energy energy - 1
     ifelse show-life?
     [ set label energy ]
     [ set label "" ]
   ]
-
-
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
