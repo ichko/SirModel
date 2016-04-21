@@ -79,12 +79,29 @@ NIL
 0
 
 BUTTON
-655
+650
 16
-922
+774
 49
-Watch from human's perspective
+Be a human
 follow one-of turtles
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+652
+79
+806
+112
+Monitor a human
+watch one-of turtles
 NIL
 1
 T
