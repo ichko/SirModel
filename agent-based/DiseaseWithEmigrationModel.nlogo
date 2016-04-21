@@ -1,7 +1,18 @@
-to setup
-  clear-all
+turtles-own [
+  energy
+  susceptible?
+  infected?
+  removed?
+]
+
+to initialize-people
   create-turtles 100 [ setxy random-xcor random-ycor ]
   ask turtles [set shape "person"]
+end
+
+to setup
+  clear-all
+  initialize-people
   reset-ticks
 end
 
@@ -79,10 +90,10 @@ NIL
 0
 
 BUTTON
-650
-16
-774
-49
+613
+44
+735
+77
 Be a human
 follow one-of turtles
 NIL
@@ -96,12 +107,29 @@ NIL
 1
 
 BUTTON
-652
-79
-806
-112
+612
+87
+734
+120
 Monitor a human
 watch one-of turtles
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+611
+135
+734
+168
+Reset perspective
+reset-perspective
 NIL
 1
 T
