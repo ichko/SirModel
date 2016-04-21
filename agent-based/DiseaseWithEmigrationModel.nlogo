@@ -18,9 +18,9 @@ to move-turtles
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
+158
 10
-649
+597
 470
 16
 16
@@ -77,6 +77,23 @@ NIL
 NIL
 NIL
 0
+
+BUTTON
+655
+16
+922
+49
+Watch from human's perspective
+follow one-of turtles
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
