@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Agent Based Model</title>
+        <style media="screen">
+            *{padding: 0;margin: 0;overflow: hidden;}
+            html, body{background: #fbfbfb;}
+        </style>
+        <script type="text/javascript" src="engine.js"></script>
+        <script type="text/javascript" src="models/sir.js"></script>
+    </head>
+    <body>
+        <canvas id="canvas" style="width: 100%;height: 100%;"></canvas>
+
+        <script type="text/javascript">
+            var canvas = document.getElementById('canvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            var ctx = canvas.getContext('2d');
+
+            var model = new SirModel(0.0001, 0.1, 0.00001);
+            var world = new World(model);
+            world.populate(100, canvas.width, canvas.height, function(agent){
+                agent.status = Math.random() < 0.01 ?
+                    model.states.infected :
+                    model.states.susceptible;
+                agent.size = Math.random() * 15 + 5;
+                agent.speed = 2;
+            });
+
+            (function animate(){
+                clear();
+                world.nextState();
+                world.render(ctx);
+                requestAnimationFrame(animate);
+            })();
+
+            function clear(){
+                // ctx.fillStyle = 'rgba(255,255,255,0.8)';
+                ctx.clearRect(0, 0, canvas.width, canvas.height)
+            }
+        </script>
+    </body>
+</html>

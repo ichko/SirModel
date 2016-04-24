@@ -1,10 +1,11 @@
 var ModelHelper = (function(){
     var ModelHelper = {};
 
-    ModelHelper.getNeightbours = function(agent, agents){
+    ModelHelper.getNeightbours = function(agent, agents, distance){
+        distance = distance || 10;
         var neighbours = [];
         for (var i = 0; i < agents.length; i++) {
-            if(agent.pos.distance(agents[i].pos) < this.distance){
+            if(agent.pos.distance(agents[i].pos) < distance){
                 neighbours.push(agents[i]);
             }
         }
@@ -15,36 +16,8 @@ var ModelHelper = (function(){
 })();
 
 
-var AgarModel = (function(){
-    function AgarModel(distance){
-        this.distance = distance || 10;
-    }
-
-    AgarModel.prototype.mutateAgent = function(agent, world){
-        agent.move(world.size);
-        var agents = world.agents;
-
-        for (var i = 0; i < agents.length; i++) {
-            if(agent.pos.distance(agents[i].pos) < agent.size + agents[i].size &&
-                    agent.size > agents[i].size &&
-                    agents[i].desiredSize != 0){
-                agent.desiredSize += agents[i].size / 2;
-                agents[i].desiredSize = 0;
-            }
-            if(agents[i].size < 0.01){
-                agents.splice(i, 1);
-            }
-        }
-    }
-
-    return AgarModel;
-})();
-
-
-
 /////////////////////////////////
-/////////////////////////////////
-
+////////////////////////////////
 
 
 Number.prototype.mod = function(n) {
@@ -65,23 +38,25 @@ var World = (function(){
         }
     }
 
-    World.prototype.render = function(ctx){
+    World.prototype.render = function(context){
         for (var i = 0; i < this.agents.length; i++) {
-            ctx.beginPath();
-            ctx.fillStyle = this.agents[i].state.background();
-            //ctx.rect(this.agents[i].pos.x, this.agents[i].pos.y,
-            //         this.agents[i].size * 2, this.agents[i].size * 2);
-            ctx.arc(this.agents[i].pos.x, this.agents[i].pos.y,
+            context.beginPath();
+            context.fillStyle = this.agents[i].status.background();
+            context.arc(this.agents[i].pos.x, this.agents[i].pos.y,
                     this.agents[i].size, 0, 2 * Math.PI);
-            ctx.fill();
+            context.fill();
         }
     }
 
-    World.prototype.randomInit = function(cnt, width, height){
+    World.prototype.populate = function(cnt, width, height, mutateAgent){
         this.size = {width: width, height: height};
         for (var i = 0; i < cnt; i++) {
-            var ag = new Agent(new Vector(Math.random() * width,
-                               Math.random() * height));
+            var ag = new Agent(
+                new Vector(Math.random() * width,Math.random() * height),
+                new Status({red: 200, green: 20, blue: 20})
+            );
+            mutateAgent && mutateAgent(ag);
+
             this.agents.push(ag);
         }
 
@@ -92,10 +67,27 @@ var World = (function(){
 })();
 
 
+var Agent = (function(){
+    function Agent(pos, status){
+        this.pos = pos || new Vector();
+        this.size = 12;
+        this.direction = 0;
+        this.status = status || new Status();
+        this.speed = Math.random() + 1;
+    }
+
+    Agent.prototype.touches = function(agent){
+        return this.pos.distance(agent.pos) < this.size + agent.size;
+    }
+
+    return Agent;
+})();
+
+
 var Status = (function(){
-    function Status(value){
+    function Status(color, value){
         this.value = value || 0;
-        this.color = {
+        this.color = color || {
             red:   Math.round(Math.random() * 250),
             green: Math.round(Math.random() * 250),
             blue:  Math.round(Math.random() * 250)
@@ -103,6 +95,8 @@ var Status = (function(){
     }
 
     Status.prototype.background = function(){
+        if(typeof this.color === 'string')
+            return this.color;
         return 'rgb(' + this.color.red   + ',' +
                         this.color.green + ',' +
                         this.color.blue  + ')';
@@ -144,6 +138,10 @@ var Vector = (function(){
         return this;
     }
 
+    Vector.prototype.direction = function(vect){
+        return Math.atan2(vecy.y - this.y, vect.x - this.x);
+    }
+
     Vector.prototype.scale = function(n){
         this.x *= n;
         this.y *=  n;
@@ -151,31 +149,4 @@ var Vector = (function(){
     }
 
     return Vector;
-})();
-
-
-var Agent = (function(){
-    function Agent(pos, state){
-        this.pos = pos || new Vector();
-        this.size = 2 + Math.random() * 5;
-        this.desiredSize = this.size;
-        this.direction = 0;
-        this.state = state || new Status();
-    }
-
-    Agent.prototype.move = function(size){
-        this.direction += Math.random() / 2 - 0.25;
-        var translationVect = new Vector(
-            (10 /  this.size / 2) * Math.cos(this.direction),
-            (10 / this.size / 2) * Math.sin(this.direction)
-        );
-
-        this.size += (this.desiredSize - this.size) / 10;
-        this.pos.translate(translationVect);
-
-        this.pos.x = this.pos.x.mod(size.width);
-        this.pos.y = this.pos.y.mod(size.height);
-    }
-
-    return Agent;
 })();
