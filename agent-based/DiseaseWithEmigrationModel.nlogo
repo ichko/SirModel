@@ -50,17 +50,17 @@ end
 to clear-people
   if (count turtles) >= too-many-people-threshold [
     ask turtles [
-      if (random 100) >= energy
+      if probability 50
       [die]
   ]]
 end
 
 to new-children
   ask turtles [
-    if(random 10) >= 9
+    if probability 90
     [hatch (random 3) [
         set energy 100
-        if (random 5) >= 4 [
+        if probability 80 [
           set color one-of [red green yellow blue ]
           ]]]
   ]
@@ -68,12 +68,16 @@ end
 
 to-report generate-initial-energy
   ; 50% chance for being an adult
-  let random-choice random 10
-  if random-choice <= 2
+  if probability 33
   [report 30]
-  if random-choice <= 5
+  if probability 50
   [report 60]
   report 100
+end
+
+; returns true with prob percentage
+to-report probability [prob]
+  report (random 100) <= prob
 end
 
 to move-turtles
@@ -113,8 +117,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-1
-1
+0
+0
 1
 -16
 16
@@ -218,7 +222,7 @@ SWITCH
 182
 show-life?
 show-life?
-0
+1
 1
 -1000
 
