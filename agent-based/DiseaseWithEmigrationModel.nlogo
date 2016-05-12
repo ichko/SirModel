@@ -24,6 +24,14 @@ to go
   check-if-should-continue
   move-turtles
   check-death
+  new-children
+end
+
+to new-children
+  ask turles [
+    if(random 10) >= 3
+    hatch (random 3)
+  ]
 end
 
 to-report generate-initial-energy
@@ -34,7 +42,6 @@ to-report generate-initial-energy
   if random-choice <= 5
   [report 60]
   report 100
-
 end
 
 to move-turtles
