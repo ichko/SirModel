@@ -57,10 +57,10 @@ end
 
 to new-children
   ask turtles [
-    if(random 10) >= 9
+    if probability 90
     [hatch (random 3) [
         set energy 100
-        if (random 5) >= 4 [
+        if probability 80 [
           set color one-of [red green yellow blue ]
           ]]]
   ]
@@ -74,6 +74,11 @@ to-report generate-initial-energy
   if random-choice <= 5
   [report 60]
   report 100
+end
+
+; returns true with prob percentage
+to-report probability [prob]
+  report (random 100) >= prob
 end
 
 to move-turtles
