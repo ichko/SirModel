@@ -27,7 +27,7 @@ to initialize-people
 end
 
 to color-borders
-  set border patches with [(pxcor =  0 and abs (pycor) >= 0)]
+  set border patches with [(pxcor =  0 and abs (pycor) >= 0) or (pycor = 0 and abs (pxcor) >= 0)]
   ask border [ set pcolor yellow ]
 end
 
