@@ -1,4 +1,8 @@
 globals [
+  death-coefficient
+  too-many-people-threshold
+  initial-turtles
+  border
 ]
 
 turtles-own [
@@ -6,16 +10,31 @@ turtles-own [
   susceptible?
   infected?
   removed?
+  left?
+  top?
 ]
 
+to initialize-globals
+  set death-coefficient 15
+  set too-many-people-threshold 150
+  set initial-turtles 100
+end
+
 to initialize-people
-  create-turtles 100 [ setxy random-xcor random-ycor ]
+  create-turtles initial-turtles [ setxy random-xcor random-ycor ]
   ask turtles [set shape "person"]
   ask turtles [set energy generate-initial-energy]
 end
 
+to color-borders
+  set border patches with [(pxcor =  0 and abs (pycor) >= 0) or (pycor = 0 and abs (pxcor) >= 0)]
+  ask border [ set pcolor yellow ]
+end
+
 to setup
   clear-all
+  color-borders
+  initialize-globals
   initialize-people
   reset-ticks
 end
@@ -24,6 +43,27 @@ to go
   check-if-should-continue
   move-turtles
   check-death
+  new-children
+  clear-people
+end
+
+to clear-people
+  if (count turtles) >= too-many-people-threshold [
+    ask turtles [
+      if (random 100) >= energy
+      [die]
+  ]]
+end
+
+to new-children
+  ask turtles [
+    if(random 10) >= 9
+    [hatch (random 3) [
+        set energy 100
+        if (random 5) >= 4 [
+          set color one-of [red green yellow blue ]
+          ]]]
+  ]
 end
 
 to-report generate-initial-energy
@@ -34,14 +74,13 @@ to-report generate-initial-energy
   if random-choice <= 5
   [report 60]
   report 100
-
 end
 
 to move-turtles
   ask turtles [
     right random 360
     forward 1
-    set energy energy - random 4
+    set energy energy - random death-coefficient
     ifelse show-life?
     [ set label 100 - energy ]
     [ set label "" ]
@@ -192,9 +231,9 @@ Number of people
 time
 totals
 0.0
-10.0
+200.0
 0.0
-10.0
+200.0
 true
 false
 "" ""
