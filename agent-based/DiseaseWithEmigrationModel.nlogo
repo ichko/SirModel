@@ -2,6 +2,7 @@ globals [
   death-coefficient
   too-many-people-threshold
   initial-turtles
+  border
 ]
 
 turtles-own [
@@ -25,8 +26,14 @@ to initialize-people
   ask turtles [set energy generate-initial-energy]
 end
 
+to color-borders
+  set border patches with [(pxcor =  0 and abs (pycor) >= 0)]
+  ask border [ set pcolor yellow ]
+end
+
 to setup
   clear-all
+  color-borders
   initialize-globals
   initialize-people
   reset-ticks
@@ -91,7 +98,6 @@ to check-if-should-continue
   [stop]
   [tick]
 end
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 131
