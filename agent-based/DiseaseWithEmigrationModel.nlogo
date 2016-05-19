@@ -14,8 +14,8 @@ turtles-own [
 ]
 
 to initialize-globals
-  set too-many-people-threshold 150
-  set initial-turtles 100
+  set too-many-people-threshold 300
+  set initial-turtles 150
   ask patches [set pcolor white]
 end
 
@@ -27,11 +27,11 @@ to initialize-people
   ask turtles [
     suscept
 
-    if probability 40 [
+    if probability initial-infected-percentage [
       infect
     ]
 
-    if probability 10 [
+    if probability initial-recovered-percentage [
       recover
     ]
   ]
@@ -64,7 +64,7 @@ end
 
 to apply-vaccine
   ask turtles [
-    if vaccine? and probability 40 [
+    if infected? and medicine? and probability 40 [
       recover
     ]
   ]
@@ -72,7 +72,7 @@ end
 
 to find-infected
   ask turtles [
-    if susceptible? and probability 80 [
+    if susceptible? and probability 10 [
       infect
     ]
   ]
@@ -81,9 +81,12 @@ end
 to heal-or-die
   ask turtles [
     if infected? [
-      ifelse probability 30 [
+      if probability 1 [
         recover
-      ] [die]
+      ]
+      if probability infect-die-rate [
+        die
+      ]
     ]
   ]
 end
@@ -183,13 +186,13 @@ to recover
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-310
+356
 10
-749
-470
+806
+481
 16
 16
-13.0
+13.33333333333334
 1
 10
 1
@@ -210,10 +213,10 @@ ticks
 30.0
 
 BUTTON
-22
-57
-95
-90
+19
+32
+92
+65
 NIL
 setup
 NIL
@@ -227,10 +230,10 @@ NIL
 1
 
 BUTTON
-27
-102
-90
-135
+24
+77
+87
+110
 NIL
 go
 T
@@ -244,10 +247,10 @@ NIL
 0
 
 BUTTON
-168
-42
-290
-75
+226
+16
+348
+49
 Be a human
 follow one-of turtles
 NIL
@@ -261,10 +264,10 @@ NIL
 1
 
 BUTTON
-167
-85
-289
-118
+225
+56
+347
+89
 Monitor a human
 watch one-of turtles
 NIL
@@ -278,10 +281,10 @@ NIL
 1
 
 BUTTON
-166
-133
-289
-166
+223
+96
+346
+129
 Reset perspective
 reset-perspective
 NIL
@@ -295,10 +298,10 @@ NIL
 1
 
 SWITCH
-12
-221
-129
-254
+5
+185
+132
+218
 show-life?
 show-life?
 1
@@ -306,15 +309,15 @@ show-life?
 -1000
 
 PLOT
-855
-67
-1055
-217
+809
+10
+1268
+247
 Number of people
 time
 totals
 0.0
-200.0
+10.0
 0.0
 200.0
 true
@@ -324,12 +327,12 @@ PENS
 "default" 1.0 0 -16777216 true "" "plot count turtles"
 
 PLOT
-783
-260
-1196
-445
+810
+253
+1273
+473
 Plot
-NIL
+time
 NIL
 0.0
 10.0
@@ -344,10 +347,10 @@ PENS
 "recovered" 1.0 0 -14439633 true "" "plot count turtles with [recovered? = true]"
 
 SWITCH
-10
-269
-136
-302
+5
+226
+132
+259
 birth-infect?
 birth-infect?
 0
@@ -355,45 +358,90 @@ birth-infect?
 -1000
 
 SLIDER
-15
-319
-187
-352
+146
+140
+349
+173
 birth-probability
 birth-probability
 0
 100
-68
+13
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-14
-368
-201
-401
+145
+185
+350
+218
 aging-coefficient
 aging-coefficient
 0
 100
-11
+17
 1
 1
 NIL
 HORIZONTAL
 
 SWITCH
-16
-179
-134
-212
-vaccine?
-vaccine?
-1
+7
+142
+131
+175
+medicine?
+medicine?
+0
 1
 -1000
+
+SLIDER
+145
+227
+351
+260
+initial-infected-percentage
+initial-infected-percentage
+0
+100
+12
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+143
+271
+349
+304
+initial-recovered-percentage
+initial-recovered-percentage
+0
+100
+15
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+142
+316
+347
+349
+infect-die-rate
+infect-die-rate
+0
+100
+33
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
