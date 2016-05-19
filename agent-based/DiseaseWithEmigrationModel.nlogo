@@ -23,10 +23,11 @@ to initialize-people
   create-turtles initial-turtles [ setxy random-xcor random-ycor ]
   ask turtles [set shape "person"]
   ask turtles [set energy generate-initial-energy]
+  ask turtles [set label-color black]
   ask turtles [
     suscept
 
-    if probability 10 [
+    if probability 40 [
       infect
     ]
 
@@ -51,10 +52,50 @@ end
 
 to go
   check-if-should-continue
-  move-turtles
+  move-people
+  heal-or-die
+  find-infected
+  infect-close-people
   check-death
   new-children
   clear-people
+  apply-vaccine
+end
+
+to apply-vaccine
+  ask turtles [
+    if vaccine? and probability 40 [
+      recover
+    ]
+  ]
+end
+
+to find-infected
+  ask turtles [
+    if susceptible? and probability 80 [
+      infect
+    ]
+  ]
+end
+
+to heal-or-die
+  ask turtles [
+    if infected? [
+      ifelse probability 30 [
+        recover
+      ] [die]
+    ]
+  ]
+end
+
+to infect-close-people
+  ask turtles [
+    if infected? [
+      ask turtles-here [
+        infect
+      ]
+    ]
+  ]
 end
 
 to clear-people
@@ -94,10 +135,13 @@ to-report probability [prob]
   report (random 100) <= prob
 end
 
-to move-turtles
+to move-people
   ask turtles [
     right random 360
     forward 1
+    if susceptible? [
+      set energy energy - 1
+    ]
     set energy energy - random aging-coefficient
     ifelse show-life?
     [ set label 100 - energy ]
@@ -159,8 +203,8 @@ GRAPHICS-WINDOW
 16
 -16
 16
-0
-0
+1
+1
 1
 ticks
 30.0
@@ -281,16 +325,16 @@ PENS
 
 PLOT
 783
-224
-1240
+260
+1196
 445
 Plot
 NIL
 NIL
 0.0
-200.0
+10.0
 0.0
-200.0
+100.0
 true
 true
 "" ""
@@ -319,7 +363,7 @@ birth-probability
 birth-probability
 0
 100
-56
+68
 1
 1
 NIL
@@ -334,11 +378,22 @@ aging-coefficient
 aging-coefficient
 0
 100
-18
+11
 1
 1
 NIL
 HORIZONTAL
+
+SWITCH
+16
+179
+134
+212
+vaccine?
+vaccine?
+1
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
