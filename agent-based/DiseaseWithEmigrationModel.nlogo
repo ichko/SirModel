@@ -16,6 +16,7 @@ turtles-own [
 to initialize-globals
   set too-many-people-threshold 150
   set initial-turtles 100
+  ask patches [set pcolor white]
 end
 
 to initialize-people
@@ -42,8 +43,8 @@ end
 
 to setup
   clear-all
-  color-borders
   initialize-globals
+  color-borders
   initialize-people
   reset-ticks
 end
@@ -120,14 +121,14 @@ to infect
   set susceptible? false
   set infected? true
   set recovered? false
-  set color black
+  set color red
 end
 
 to suscept
   set susceptible? true
   set infected? false
   set recovered? false
-  set color red
+  set color black
 end
 
 to recover
