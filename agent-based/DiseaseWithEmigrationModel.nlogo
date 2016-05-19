@@ -24,6 +24,10 @@ to initialize-people
   create-turtles initial-turtles [ setxy random-xcor random-ycor ]
   ask turtles [set shape "person"]
   ask turtles [set energy generate-initial-energy]
+  ; hardcoded; fix
+  ask turtles [set susceptible? true]
+  ask turtles [set infected? true]
+  ask turtles [set removed? true]
 end
 
 to color-borders
@@ -165,10 +169,10 @@ NIL
 0
 
 BUTTON
-613
-44
-735
-77
+4
+201
+126
+234
 Be a human
 follow one-of turtles
 NIL
@@ -182,10 +186,10 @@ NIL
 1
 
 BUTTON
-612
-87
-734
-120
+3
+244
+125
+277
 Monitor a human
 watch one-of turtles
 NIL
@@ -199,10 +203,10 @@ NIL
 1
 
 BUTTON
-611
-135
-734
-168
+2
+292
+125
+325
 Reset perspective
 reset-perspective
 NIL
@@ -227,10 +231,10 @@ show-life?
 -1000
 
 PLOT
-615
-207
-815
-357
+595
+11
+795
+161
 Number of people
 time
 totals
@@ -243,6 +247,60 @@ false
 "" ""
 PENS
 "default" 1.0 0 -16777216 true "" "plot count turtles"
+
+PLOT
+596
+176
+796
+326
+Susceptible
+NIL
+NIL
+0.0
+200.0
+0.0
+200.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot count turtles with [susceptible? = true]"
+
+PLOT
+596
+343
+796
+493
+Infected
+NIL
+NIL
+0.0
+200.0
+0.0
+200.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot count turtles with [infected? = true]"
+
+PLOT
+828
+174
+1028
+324
+Recovered
+NIL
+NIL
+0.0
+200.0
+0.0
+200.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot count turtles with [removed? = true]"
 
 @#$#@#$#@
 ## WHAT IS IT?
