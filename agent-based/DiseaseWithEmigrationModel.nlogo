@@ -72,7 +72,7 @@ end
 
 to find-infected
   ask turtles [
-    if susceptible? and probability 10 [
+    if susceptible? and not medicine? and probability 10 [
       infect
     ]
   ]
