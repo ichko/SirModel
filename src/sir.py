@@ -10,6 +10,7 @@ class Model:
         self.r_init = r_init
         self.alpha = alpha
         self.beta = beta
+        self.prob_revert = 0.03
         self.max_iter = 1000
         self.time_unit = 1
         self.basic_reproduction = None
@@ -32,7 +33,9 @@ class Model:
             if I[time] + s_to_i - i_to_r < 0:
                 i_to_r = I[time] + s_to_i
 
-            S.append(S[time] - s_to_i)
+            r_to_s = R[time] * self.prob_revert
+
+            S.append(S[time] - s_to_i + r_to_s)
             I.append(I[time] + s_to_i - i_to_r)
             R.append(total_num_people - (S[time] + I[time]))
             time += 1
