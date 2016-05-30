@@ -3,12 +3,14 @@
     <head>
         <meta charset="utf-8">
         <title>Model</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
-        <link rel="stylesheet" href="style.css">
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.0.7/jsPlumb.min.js"></script>
-        <script type="text/javascript" src="http://www.chartjs.org/assets/Chart.min.js"></script>
+
+        <link rel="stylesheet" href="styles/bootstrap.min.css">
+        <link rel="stylesheet" href="styles/style.css">
+
+        <script type="text/javascript" src="scripts/jquery.min.js"></script>
+        <script type="text/javascript" src="scripts/jquery-ui.js"></script>
+        <script type="text/javascript" src="scripts/jsPlumb.min.js"></script>
+        <script type="text/javascript" src="scripts/Chart.min.js"></script>
         <script type="text/javascript" src="scripts/config.js"></script>
         <script type="text/javascript" src="scripts/plotStats.js"></script>
         <script type="text/javascript" src="scripts/engine.js"></script>
@@ -25,9 +27,8 @@
         <div id="playground"></div>
 
         <script type="text/javascript">
-            var engine;
             $(document).ready(function(){
-                engine = uiInit(config, chartBuilder);
+                var engine = uiInit(config, chartBuilder);
             });
         </script>
     </body>
