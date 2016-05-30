@@ -1,7 +1,17 @@
+/*
+var nodes = [new Node({name: 'S', quantity: 700}),
+             new Node({name: 'I', quantity: 2}),
+             new Node({name: 'R', quantity: 0})];
+var edges = [new Edge({from: nodes[0], to: nodes[1], formula: 'a*S*I'}),
+             new Edge({from: nodes[1], to: nodes[2], formula: 'b*I'})];
+var engine = new Engine({edges: edges, nodes: nodes, params: {a: 0.1, b: 0.5}});
+*/
+
+
 var Node = (function(){
 
     function Node(config){
-        this.quantity = config.quantity || 10;
+        this.quantity = config.quantity || 0;
         this.name = config.name || 'unnamed';
     }
 
@@ -24,7 +34,16 @@ var Edge = (function(){
             result = result.replace(propName, namespace[propName])
         }
 
-        return eval(result)
+        if(result !== ''){
+            try {
+                return eval(result);
+            }
+            catch(error){
+                console.log(error);
+                return 0;
+            }
+        }
+        return 0;
     }
 
     return Edge;
@@ -34,14 +53,14 @@ var Edge = (function(){
 
 var Engine = (function(){
 
-    function Engine(config){
+    function Engine(config = {}){
         this.edges = config.edges || [];
         this.nodes = config.nodes || [];
         this.params = config.params || {};
         this.stats = {};
     }
 
-    Edges.prototype.buildNamespace = function(){
+    Engine.prototype.buildNamespace = function(){
         var result = {};
         this.nodes.forEach(function(node){
             result[node.name] = node.quantity;
@@ -54,14 +73,13 @@ var Engine = (function(){
         return result;
     }
 
-    Engine.prototype.updateStats = function(){
+    Engine.prototype.statsSnapshot = function(){
         var self = this;
         this.nodes.forEach(function(node){
-            var stat = self.stats[node.name];
-            if(typeof stat === 'undefined'){
-                stat = [node.quantity];
+            if(typeof self.stats[node.name] === 'undefined'){
+                self.stats[node.name] = [node.quantity];
             }else{
-                stat.push(node.quantity);
+                self.stats[node.name].push(node.quantity);
             }
         });
     }
@@ -69,17 +87,17 @@ var Engine = (function(){
     Engine.prototype.next = function(){
         var namespace = this.buildNamespace();
         var derivatives = [];
-        this.edges.forEach(function(edge){
+        this.edges.forEach(function(edge, i){
             var derivative = edge.derivative(namespace);
-            derivatives.push(derivative);
+            derivatives[i] = derivative;
         });
 
-        for (var i = 0; i < this.edges.length; i++) {
-            var edge = this.edges[i];
-            var transfer = Math.max(derivatives[i], 0);
+        this.edges.forEach(function(edge, i){
+            var transfer = Math.max(Math.min(derivatives[i], edge.from.quantity), 0);
+            transfer = Math.ceil(transfer);
             edge.from.quantity -= transfer;
             edge.to.quantity += transfer;
-        }
+        });
     }
 
     return Engine;

@@ -1,0 +1,28 @@
+*{transition: background 0.3s ease;margin: 0;padding: 0;outline: none!important;}
+html, body{background: #293247;font-family: Calibri}
+.node{display: inline;padding: 10px;background: #eee;cursor: default;border-radius: 5px;
+position: absolute;left: 0;top: 0;border-left: 25px solid rgba(255,255,255,.2);
+cursor: move;}
+.jsplumb-connector { z-index:4; opacity: 0.4;}
+.jsplumb-endpoint { z-index:5; }
+.jsplumb-overlay { z-index:6; }
+#playground{min-height: 550px;position: relative;background: #e7eaf1;}
+#canvas{float: right;position: relative;z-index: 20;top: 50px}
+.node input{background: transparent;border: 0;color: #fff;text-align: center;
+font-size: 15pt;font-weigh: bold;text-shadow: 1px 1px 0 rgba(0,0,0,.3);
+width: 100px;}
+.node input.node-name{font-size: 25pt;}
+::-webkit-input-placeholder{color: rgba(255,255,255,.5);text-shadow: none;}
+.removeNode{float: right;padding: 5px 10px;background: rgba(0,0,0,.3);color: #fff;
+cursor: pointer;position: relative;top: -10px;right: -10px;border-radius: 0 5px 0 0;opacity: 0.7;}
+.removeNode:hover{opacity: 1;}
+.removeEdge{cursor: pointer;padding: 10px 10px 9px 9px;background: rgba(68, 85, 102, .5);color: #fff;opacity: 0.7;
+border-radius: 0 50px 50px 0;font-size: 8pt;font-weight: bold;position: relative;top: -1px;}
+.removeEdge:hover{opacity: 1;background: red;}
+.formula{border: none;background: rgba(68, 85, 102, .8);color: #fff;text-align: center;padding: 5px;
+font-size: 12pt;width: 90px;border-radius: 50px 0 0 50px;opacity: 0.6;font-weight: bold;}
+.formula:hover, .formula:focus{opacity: 1;}
+.btn{border-radius: 0;margin: 0;background: rgba(255,255,255,.1);padding: 10px 20px;color: #fff;text-transform: uppercase;
+font-size: 10pt;font-weight: bold;margin: 5px 2.5px;}
+.btn:hover, .btn:focus{color: #fff;background: rgba(255,255,255,.3)}
+.controls{letter-spacing: -10px;}
