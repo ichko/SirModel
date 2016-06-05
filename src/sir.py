@@ -10,7 +10,7 @@ class Model:
         self.r_init = r_init
         self.alpha = alpha
         self.beta = beta
-        self.prob_revert = 0.03
+        self.prob_revert = 0
         self.max_iter = 1000
         self.time_unit = 1
         self.basic_reproduction = None

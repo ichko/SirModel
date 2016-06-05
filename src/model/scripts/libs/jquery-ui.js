@@ -4860,7 +4860,7 @@ $.extend(Datepicker.prototype, {
 	 *					dayNames		string[7] - names of the days from Sunday (optional)
 	 *					monthNamesShort string[12] - abbreviated names of the months (optional)
 	 *					monthNames		string[12] - names of the months (optional)
-	 * @return  Date - the extracted date value or null if value is blank
+	 * @return  Date - the utils.extracted date value or null if value is blank
 	 */
 	parseDate: function (format, value, settings) {
 		if (format == null || value == null) {
@@ -4895,7 +4895,7 @@ $.extend(Datepicker.prototype, {
 				}
 				return matches;
 			},
-			// Extract a number from the string value
+			// utils.extract a number from the string value
 			getNumber = function(match) {
 				var isDoubled = lookAhead(match),
 					size = (match === "@" ? 14 : (match === "!" ? 20 :
@@ -4909,7 +4909,7 @@ $.extend(Datepicker.prototype, {
 				iValue += num[0].length;
 				return parseInt(num[0], 10);
 			},
-			// Extract a name from the string value and convert to an index
+			// utils.extract a name from the string value and convert to an index
 			getName = function(match, shortNames, longNames) {
 				var index = -1,
 					names = $.map(lookAhead(match) ? longNames : shortNames, function (v, k) {
@@ -5158,7 +5158,7 @@ $.extend(Datepicker.prototype, {
 		return output;
 	},
 
-	/* Extract all possible characters from the date format. */
+	/* utils.extract all possible characters from the date format. */
 	_possibleChars: function (format) {
 		var iFormat,
 			chars = "",

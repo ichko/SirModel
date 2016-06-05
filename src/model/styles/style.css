@@ -1,16 +1,17 @@
 *{transition: background 0.3s ease;margin: 0;padding: 0;outline: none!important;}
-html, body{background: #293247;font-family: Calibri}
+html, body{background: #293247;font-family: Calibri;height: 100%;}
 .node{display: inline;padding: 10px;background: #eee;cursor: default;border-radius: 5px;
-position: absolute;left: 0;top: 0;border-left: 25px solid rgba(255,255,255,.2);
+position: absolute;left: 160px;top: 20px;border-left: 25px solid rgba(255,255,255,.2);
 cursor: move;}
 .jsplumb-connector { z-index:4; opacity: 0.4;}
 .jsplumb-endpoint { z-index:5; }
 .jsplumb-overlay { z-index:6; }
 #playground{min-height: 550px;position: relative;background: #e7eaf1;}
 #canvas{float: right;position: relative;z-index: 20;top: 50px}
-.node input{background: transparent;border: 0;color: #fff;text-align: center;
+.node input[type="text"]{background: transparent;border: 0;color: #fff;text-align: center;
 font-size: 15pt;font-weigh: bold;text-shadow: 1px 1px 0 rgba(0,0,0,.3);
 width: 100px;}
+.node input[type="checkbox"]{float: left;margin: -5px 0 0 -5px;}
 .node input.node-name{font-size: 25pt;}
 ::-webkit-input-placeholder{color: rgba(255,255,255,.5);text-shadow: none;}
 .removeNode{float: right;padding: 5px 10px;background: rgba(0,0,0,.3);color: #fff;
@@ -26,3 +27,10 @@ font-size: 12pt;width: 90px;border-radius: 50px 0 0 50px;opacity: 0.6;font-weigh
 font-size: 10pt;font-weight: bold;margin: 5px 2.5px;}
 .btn:hover, .btn:focus{color: #fff;background: rgba(255,255,255,.3)}
 .controls{letter-spacing: -10px;}
+
+.modelParams{float: left;background: #293247;position: relative;z-index: 25;height: 100%;}
+.params{padding: 5px;}
+.paramField{background: rgba(0,0,0,.3);border: none;width: 50px;padding: 5px;color: rgba(255,255,255,.8);}
+.paramField:hover, .paramField:focus{background: rgba(0,0,0,.5);color: #fff;}
+.params li{border-bottom: 2px dashed rgba(255,255,255,.1);padding: 5px 0;}
+.removeParam{background: rgba(0,0,0,.3);border: none;color: #fff;font-weight: bold;padding: 5px 10px;}

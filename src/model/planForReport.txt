@@ -1,0 +1,11 @@
+Everything we got:
+    Pes:
+        Intro
+        Sir
+        Saic
+    Schweppes:
+        Euler
+        PesiModelingSoft
+        Cellular automaton
+    For desert:
+        Gradient Descent!

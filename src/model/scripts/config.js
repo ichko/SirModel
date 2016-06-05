@@ -2,12 +2,18 @@ var config = (function(){
 
     var templates = {
         nodeElement: '<div style="background: {color}" data-id="{id}" id="node-{id}" class="node">' +
+                        '<input type="checkbox" checked>' +
                         '<span class="removeNode">X</span>' +
                         '<input type="text" class="node-name" placeholder="name"><br/>' +
                         '<input type="text" class="node-quantity" placeholder="quantity">' +
                      '</div>',
         connectionLabel: '<input data-id="{edgeId}" class="formula" type="text" placeholder="Formula"/>' +
-                         '<span class="removeEdge" data-id="{edgeId}" >X</span>'
+                         '<span class="removeEdge" data-id="{edgeId}" >X</span>',
+        parameterElement: '<li data-id="{id}">' +
+                            '<input class="paramName paramField" placeholder="name" value="{name}" type="text" /> ' +
+                            '<input class="paramVal paramField" placeholder="value" type="text" /> ' +
+                            '<button class="removeParam">X</button>' +
+                          '</li>'
     };
 
     var endpointOptions = {

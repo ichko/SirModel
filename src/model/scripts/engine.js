@@ -94,7 +94,7 @@ var Engine = (function(){
 
         this.edges.forEach(function(edge, i){
             var transfer = Math.max(Math.min(derivatives[i], edge.from.quantity), 0);
-            transfer = Math.ceil(transfer);
+            transfer = transfer;
             edge.from.quantity -= transfer;
             edge.to.quantity += transfer;
         });

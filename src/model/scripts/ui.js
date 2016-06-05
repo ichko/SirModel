@@ -1,26 +1,28 @@
-function uiInit(config, chartBuilder){
-    var chart = {};
-    var chartCnt = 0;
-    var maxChartData = 50;
-    var idAtrib = 'data-id';
-    var containerSelector = '.play';
-    var interval = undefined;
-    var intervalPeriod = 300;
-    var colors = [
-        {r: 0, g: 114, b: 187},
-        {r: 255, g: 76, b: 59},
-        {r: 255, g: 208, b: 52},
-        {r: 50, g: 185, b: 45},
-        {r: 242, g: 0, b: 117},
-        {r: 111, g: 54, b: 98},
-        {r: 255, g: 153, b: 0}
-    ];
-    var colorCnt = 0;
+function uiInit(utils, config, chart){
 
     var nodes = [];
     var edges = [];
-    var params = {a: 0.001, b: 0.1};
-    var engine = new Engine({nodes: nodes, edges: edges, params: params});
+    var params = {};
+    var engine = new Engine({
+        nodes: nodes,
+        edges: edges,
+        params: params
+    });
+
+    var containerSelector = '.play';
+    var idAtrib = 'data-id';
+    var interval = undefined;
+    var intervalPeriod = 50;
+    var paramCnt = 0;
+    var colorCnt = 0;
+    var colors = [
+        {r: 0, g: 114, b: 187}, {r: 255, g: 76, b: 59}, {r: 255, g: 208, b: 52},
+        {r: 50, g: 185, b: 45}, {r: 242, g: 0, b: 117}, {r: 111, g: 54, b: 98},
+        {r: 255, g: 153, b: 0}
+    ];
+
+    var chart = uiChart(Chart, nodes);
+    var extract = utils.extractor(idAtrib, nodes, edges);
 
 
     function addUiNode(node, id){
@@ -28,7 +30,7 @@ function uiInit(config, chartBuilder){
             name: node.name,
             quantity: node.quantity,
             id: id,
-            color: colorToString(node.color)
+            color: utils.colorToString(node.color)
         });
 
         $('#playground').append(containerDom);
@@ -61,7 +63,6 @@ function uiInit(config, chartBuilder){
 
         return false;
     }
-
 
     function addEdgeEvents(){
         $('.formula').off().change(function(){
@@ -103,21 +104,25 @@ function uiInit(config, chartBuilder){
 
             delete nodes[id];
             jsPlumb.remove('node-' + id);
-            chart = chartInit(nodes);
-            chartCnt = 0;
+            chart.resetChart();
+        });
+
+        $('.node input[type="checkbox"]').change(function(){
+            var node = extract.nodeFromParentUi(this).node;
+            node.visible = $(this).is(':checked');
+            chart.resetChart();
         });
     }
 
     $('#addNode').click(function(){
         var node = new Node({});
+        node.visible = true;
         colors[colorCnt].a = 1;
         node.color = colors[colorCnt];
         colorCnt = (colorCnt + 1) % colors.length;
         nodes.push(node);
 
-        chart = chartInit(nodes);
-        chartCnt = 0;
-
+        chart.resetChart();
         addUiNode(node, nodes.length - 1);
     });
 
@@ -125,9 +130,7 @@ function uiInit(config, chartBuilder){
         if($(this).attr('data-play') === 'false'){
             $(this).attr('data-play', 'true');
             $(this).text('Pause');
-            interval = setInterval(function () {
-                $('#next').click();
-            }, intervalPeriod);
+            interval = setInterval(engineSnap, intervalPeriod);
         }else{
             $(this).attr('data-play', 'false');
             $(this).text('Play');
@@ -135,86 +138,57 @@ function uiInit(config, chartBuilder){
         }
     });
 
-    $('#clearChart').click(function(){
-        chart = chartInit(nodes);
-        chartCnt = 0;
-    });
-
-    function chartInit(nodes){
-        var datasets = [];
-        nodes.forEach(function(node){
-            var strokeStyle = colorToString(node.color);
-            node.color.a = 0.1;
-            var fillStyle = colorToString(node.color);
-            node.color.a = 1;
-
-            datasets.push({
-                fillColor: fillStyle,
-                strokeColor: strokeStyle,
-                pointColor: strokeStyle,
-                pointStrokeColor: "#fff",
-                data: [0]
-            })
-        });
-        return chartBuilder(datasets);
-    }
-
-    $('#next').click(function(){
+    function engineSnap(){
         engine.statsSnapshot();
         engine.next();
         var chartData = [];
 
         nodes.forEach(function(node, id){
+            if(!node.visible) return;
             $('#node-' + id + ' .node-quantity').val(node.quantity);
             chartData.push(node.quantity);
         });
 
-        chart.addData && chart.addData(chartData, chartCnt++);
-        if(chartCnt > maxChartData){
-            chart.removeData && chart.removeData();
-        }
+        chart.addData(chartData);
+    };
+
+    $('#addParam').click(function(){
+        var name = 'p' + ++paramCnt;
+        $('.params').append(config.templates.parameterElement.format({
+            id: name,
+            name: name
+        }));
+
+        addParamEvents();
     });
 
+    function addParamEvents(){
+        $('.paramName').off().change(function(){
+            var newName = $(this).val();
+            var oldName = extract.getPropName(this);
+            var val = params[oldName];
+            delete params[oldName];
+            params[newName] = val;
+            $(this).parent().attr(idAtrib, newName);
+        });
 
-    jsPlumb.bind("beforeDrop", addUiEdge);
+        $('.paramVal').off().change(function(){
+            if($(this).val() === '')
+                delete params[name];
+            var name = extract.getPropName(this);
+            params[name] = +$(this).val();
+        });
 
-    var extract = {
-        nodeFromUi: function(selector){
-            return nodes[+$(selector).attr(idAtrib)];
-        },
-        nodeFromParentUi: function(selector){
-            var id = +$(selector).parent().attr(idAtrib);
-            return {
-                node: nodes[id],
-                id: id
-            }
-        },
-        edgeFromUi: function(selector){
-            var id = +$(selector).attr(idAtrib);
-            return {
-                edge: edges[id],
-                id: id
-            }
-        }
+        $('.removeParam').off().click(function(){
+            var name = extract.getPropName(this);
+            delete params[name];
+            $(this).parent().remove();
+        });
     }
 
-    function colorToString(color){
-        return 'rgba({r}, {g}, {b}, {a})'.format(color);
-    }
+    $('#clearChart').click(chart.resetChart);
+    $('#toggleChart').click($().toggle.bind($('#canvas')));
+    jsPlumb.bind('beforeDrop', addUiEdge);
 
     return engine;
-}
-
-String.prototype.replaceAll = function(search, replacement) {
-    var target = this;
-    return target.split(search).join(replacement);
-};
-
-String.prototype.format = function(obj){
-    var result = this;
-    for(propName in obj){
-        result = result.replaceAll('{' + propName + '}', obj[propName]);
-    }
-
-    return result;
 }
