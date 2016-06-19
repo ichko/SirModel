@@ -33,6 +33,9 @@ var Edge = (function(){
         for(var propName in namespace){
             result = result.replace(propName, namespace[propName])
         }
+        var rnd = function(min, max){
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        };
 
         if(result !== ''){
             try {
@@ -94,7 +97,7 @@ var Engine = (function(){
 
         this.edges.forEach(function(edge, i){
             var transfer = Math.max(Math.min(derivatives[i], edge.from.quantity), 0);
-            transfer = transfer;
+            transfer = Math.ceil(transfer);
             edge.from.quantity -= transfer;
             edge.to.quantity += transfer;
         });
