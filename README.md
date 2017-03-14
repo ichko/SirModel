@@ -1,7 +1,7 @@
 # Sir Model (epidemiology experiments)
 Modeling app link - [CLICK](https://rawgit.com/ichko/SirModel/master/src/model/index.html)
 
-##Example
+## Example
 ```python
 alpha = 0.3
 beta = 0.5
